@@ -1,0 +1,30 @@
+ircjson-1.0
+
+<- GET http://6irc.net/api/6ircremote-1.0/
+ircjson_mirror_found("http://api.6irc.net:26667/");
+
+<- GET http://api.6irc.net:26667/*/create_session?apikey=WRONGAPIKEY
+ircjson_handle({error: "Wrong api key"});
+
+<- GET http://api.6irc.net:26667/*/create_session?apikey=JJSJAJSFJHAJHSFJHASF
+ircjson_handle({connid: "g64f3ths"});
+
+<- GET http://api.6irc.net:26667/g64f3ths/send?line=6IN:USER nickname [password]
+ircjson_handle({connid: "g64f3ths", replies: []});
+
+<- GET http://api.6irc.net:26667/g64f3ths/send?line=JOIN #lol
+ircjson_handle({connid: "g64f3ths", replies: []});
+
+<- GET http://api.6irc.net:26667/g64f3ths/poll
+ircjson_handle({connid: "g64f3ths", replies: [":a!b@c JOIN #lol", ":c!d@e PRIVMSG #lol :czaks"]});
+
+<- GET http://api.6irc.net:26667/g64f3ths/send?line=QUIT
+<- GET http://api.6irc.net:26667/g64f3ths/poll
+<- GET http://api.6irc.net:26667/g64f3ths/poll
+ircjson_handle({connid: "g64f3ths", error: "Disconnected"});
+
+<- GET http://api.6irc.net:26667/sdhfjshjkdfkhj/poll
+ircjson_handle({error: "Not connected"});
+
+<- GET http://api.6irc.net:26667/something/something
+ircjson_handle({error: "Unknown entity"});
