@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv='Content-type' content='text/html; charset=utf-8' />
+<title>ircjson.js example</title>
+<script type='text/javascript' src='ircjson.js'></script>
+<script type='text/javascript'>/*<![CDATA[*/
+timer = null
+tosend = null
+tosend_now = null
+
+ircjson.host = "http://6irc.net/api/6ircremote-1.0/";
+ircjson.apikey = "BETAKEY";
+ircjson.onConnect = function() {
+  ircjson.send("6IN:USER "+prompt("What's your nickname?", ""));
+}
+ircjson.onReply = function(d) {
+  document.getElementById("replies").innerHTML +=
+    d.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;") + "<br />\n";
+}
+ircjson.onGotReplies = function() {
+  if(tosend) {
+    tosend_now = tosend
+    tosend = null
+    setTimeout("ircjson.send(tosend_now);", 400);
+  }
+  else {
+    setTimeout("ircjson.poll();", 400);
+  }
+}
+function initme() {
+  ircjson.init();
+}
+function handleme() {
+  tosend = document.getElementById("text").value;
+  document.getElementById("text").value = "";
+  return false;
+}
+/*]]>*/</script>
+</head>
+<body onload='initme()'>
+<div id='replies'>
+</div>
+<form onsubmit='return handleme()'>
+<input type='text' id='text'>
+<input type='submit' value='Send'>
+</form>
+</body>
+</html>
